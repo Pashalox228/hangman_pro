@@ -103,6 +103,10 @@ def update_game_state(player_variant):
                 current_player = names[0]
                 if len(players) == 1:
                     buy_prizes()
+            else:
+                names.insert(0, names.pop(-1))
+                print("меняем игрока")
+                current_player = names[0]
 
 
 
