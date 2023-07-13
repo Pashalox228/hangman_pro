@@ -26,11 +26,12 @@
 В конце за очки можно будет купить призы.
 """
 import random
-
+import time
 words = ["камень", "компьютер", "телевизор", "холодильник", "ножницы", "книга", "сертификат", "гравюра", "котёнок",
          "календарь", "пульт", "фонарь", "квартира", "система", "картинка", "дверь", "динамики", "самолёт", "ковёр",
          "тетрадь", "калькулятор", "кокос", "миндаль", "город", "колонки"]
-
+game_wheel=[100,200,300,500,1000,"Сектор приз",0]
+prizes_from_sector_prize=["сковородка","миксер","кофемолка","кофемашина","стол","стул"]
 word = random.choice(words)
 print(word)
 split_word = list(word)
@@ -60,6 +61,24 @@ def display_game_board():
 
 
 def get_player_input():
+    print("Крутим барабан")
+    time.sleep(4)
+    chosen_sector=random.choice(game_wheel)
+    if chosen_sector=="Сектор приз":
+        print("Сектор приз на барабане")
+        option=input("Выбирайте: приз или 2000 очков")
+        if option=="приз":
+            print("Вы выбрали приз,поэтому вы получаете",random.choice(prizes_from_sector_prize))
+            update_game_state(player_variant=option)
+        elif option=="2000 очков":
+            chosen_sector=2000
+            player_variant = input(
+                "Введите одну букву или попробуйте сразу угадать слово,но помните,у вас на это 2 попытки,по истечению которых вы вылетаете из игры:")
+            while player_variant == "":
+                player_variant = input("Вы ничего не ввели,напишите одну букву или целое слово:")
+            update_game_state(player_variant=player_variant,chosen_sector=chosen_sector)
+
+
     player_variant = input(
         "Введите одну букву или попробуйте сразу угадать слово,но помните,у вас на это 2 попытки,по истечению которых вы вылетаете из игры:")
     while player_variant == "":
@@ -67,14 +86,19 @@ def get_player_input():
     update_game_state(player_variant=player_variant)
 
 
-def update_game_state(player_variant):
+def update_game_state(player_variant,chosen_sector):
     global current_player
-    if len(player_variant) == 1:
+    if player_variant=="приз":
+        names.insert(0, names.pop(-1))
+        names.remove(current_player)
+        print("меняем игрока")
+        current_player = names[0]
+    elif len(player_variant) == 1:
         if player_variant in split_word:
             for i in range(len(word)):
                 if split_word[i] == player_variant:
                     hidden_word[i] = player_variant
-                    players[current_player][0] += 100
+                    players[current_player][0] +=chosen_sector
         else:
             names.insert(0, names.pop(-1))
             print("меняем игрока")
