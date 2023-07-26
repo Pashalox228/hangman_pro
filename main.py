@@ -27,31 +27,58 @@
 """
 import random
 import time
-words = ["камень", "компьютер", "телевизор", "холодильник", "ножницы", "книга", "сертификат", "гравюра", "котёнок",
-         "календарь", "пульт", "фонарь", "квартира", "система", "картинка", "дверь", "динамики", "самолёт", "ковёр",
-         "тетрадь", "калькулятор", "кокос", "миндаль", "город", "колонки"]
-game_wheel=[100,200,300,500,1000,"Сектор приз",0]
-prizes_from_sector_prize=["сковородка","миксер","кофемолка","кофемашина","стол","стул"]
+
+words = [
+    "камень",
+    "компьютер",
+    "телевизор",
+    "холодильник",
+    "ножницы",
+    "книга",
+    "сертификат",
+    "гравюра",
+    "котёнок",
+    "календарь",
+    "пульт",
+    "фонарь",
+    "квартира",
+    "система",
+    "картинка",
+    "дверь",
+    "динамики",
+    "самолёт",
+    "ковёр",
+    "тетрадь",
+    "калькулятор",
+    "кокос",
+    "миндаль",
+    "город",
+    "колонки",
+]
+game_wheel = [100, 200, 300, 500, 1000, "Сектор приз", 0]
+prizes_from_sector_prize = [
+    "сковородка",
+    "миксер",
+    "кофемолка",
+    "кофемашина",
+    "стол",
+    "стул",
+]
 word = random.choice(words)
 print(word)
 split_word = list(word)
 hidden_word = list("-" * len(word))
+COUNT_OF_PLAYERS = 3
+names = []
+players = {}
 
-player_1 = input("Имя первого игрока:")
-player_2 = input("Имя второго игрока:")
-player_3 = input("Имя третьего игрока:")
-
-score_1 = 0
-score_2 = 0
-score_3 = 0
-
-attempts_1 = 2
-attempts_2 = 2
-attempts_3 = 2
-
-names = [player_1, player_2, player_3]
+for i in range(COUNT_OF_PLAYERS):
+    name = input(f"Имя игрока {i}:")
+    names.append(name)
+    score = 0
+    attempts = 2
+    players[name] = [score, attempts]
 current_player = names[0]
-players = {player_1: [score_1, attempts_1], player_2: [score_2, attempts_2], player_3: [score_3, attempts_3]}
 
 
 def display_game_board():
@@ -59,46 +86,59 @@ def display_game_board():
     print(" ".join(hidden_word))
     print("Ход игрока:", current_player)
 
+
 """111--111--111"""
+
+
 def get_player_input():
     print("Крутим барабан")
-    a=-1
-    b=0
+    a = -1
+    b = 0
     game_wheel1 = game_wheel * 3
-    for i in range(random.randint(5,10)):
+    for i in range(random.randint(5, 10)):
         a += 2
-        print(game_wheel1[a-1],"--|",game_wheel1[a],"|--",game_wheel1[a+1])
-        b+=0.33
+        print(game_wheel1[a - 1], "--|", game_wheel1[a], "|--", game_wheel1[a + 1])
+        b += 0.33
         time.sleep(b)
 
-    chosen_sector=game_wheel1[a]
-    if chosen_sector=="Сектор приз":
+    chosen_sector = game_wheel1[a]
+    if chosen_sector == "Сектор приз":
         print("Сектор приз на барабане")
-        option=input("Выбирайте: приз или 2000 очков")
-        if option=="приз":
-            print("Вы выбрали приз,поэтому вы получаете",random.choice(prizes_from_sector_prize))
+        option = input("Выбирайте: приз или 2000 очков")
+        if option == "приз":
+            print(
+                "Вы выбрали приз,поэтому вы получаете",
+                random.choice(prizes_from_sector_prize),
+            )
             update_game_state(player_variant=option)
-        elif option=="2000 очков":
-            chosen_sector=2000
+        elif option == "2000 очков":
+            chosen_sector = 2000
             player_variant = input(
-                "Введите одну букву или попробуйте сразу угадать слово,но помните,у вас на это 2 попытки,по истечению которых вы вылетаете из игры:")
+                "Введите одну букву или попробуйте сразу угадать слово,но помните,у вас на это 2 попытки,по истечению которых вы вылетаете из игры:"
+            )
             while player_variant == "":
-                player_variant = input("Вы ничего не ввели,напишите одну букву или целое слово:")
-            update_game_state(player_variant=player_variant,chosen_sector=chosen_sector)
+                player_variant = input(
+                    "Вы ничего не ввели,напишите одну букву или целое слово:"
+                )
+            update_game_state(
+                player_variant=player_variant, chosen_sector=chosen_sector
+            )
     else:
-        print("На барабане упало",chosen_sector)
-
+        print("На барабане упало", chosen_sector)
 
     player_variant = input(
-        "Введите одну букву или попробуйте сразу угадать слово,но помните,у вас на это 2 попытки,по истечению которых вы вылетаете из игры:")
+        "Введите одну букву или попробуйте сразу угадать слово,но помните,у вас на это 2 попытки,по истечению которых вы вылетаете из игры:"
+    )
     while player_variant == "":
-        player_variant = input("Вы ничего не ввели,напишите одну букву или целое слово:")
+        player_variant = input(
+            "Вы ничего не ввели,напишите одну букву или целое слово:"
+        )
     update_game_state(player_variant=player_variant)
 
 
-def update_game_state(player_variant,chosen_sector):
+def update_game_state(player_variant, chosen_sector):
     global current_player
-    if player_variant=="приз":
+    if player_variant == "приз":
         names.insert(0, names.pop(-1))
         names.remove(current_player)
         print("меняем игрока")
@@ -108,13 +148,11 @@ def update_game_state(player_variant,chosen_sector):
             for i in range(len(word)):
                 if split_word[i] == player_variant:
                     hidden_word[i] = player_variant
-                    players[current_player][0] +=chosen_sector
+                    players[current_player][0] += chosen_sector
         else:
             names.insert(0, names.pop(-1))
             print("меняем игрока")
             current_player = names[0]
-
-
 
     else:
         if player_variant == word:
@@ -143,10 +181,9 @@ def update_game_state(player_variant,chosen_sector):
                 current_player = names[0]
 
 
-
 def buy_prizes():
     list_prizes = {"Велосипед": 300, "Ноутбук": 400, "Компьютер": 500, "Машина": 1000}
-    print('\n'.join("{}: {}".format(k, v) for k, v in list_prizes.items()))
+    print("\n".join("{}: {}".format(k, v) for k, v in list_prizes.items()))
     print("Очков у вас:", players[current_player][0])
     variant = input("Введите название предмета,который вы бы хотели забрать:")
     while players[current_player][0] <= list_prizes[variant]:
