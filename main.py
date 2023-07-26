@@ -59,11 +59,19 @@ def display_game_board():
     print(" ".join(hidden_word))
     print("Ход игрока:", current_player)
 
-
+"""111--111--111"""
 def get_player_input():
     print("Крутим барабан")
-    time.sleep(4)
-    chosen_sector=random.choice(game_wheel)
+    a=-1
+    b=0
+    game_wheel1 = game_wheel * 3
+    for i in range(random.randint(5,10)):
+        a += 2
+        print(game_wheel1[a-1],"--|",game_wheel1[a],"|--",game_wheel1[a+1])
+        b+=0.33
+        time.sleep(b)
+
+    chosen_sector=game_wheel1[a]
     if chosen_sector=="Сектор приз":
         print("Сектор приз на барабане")
         option=input("Выбирайте: приз или 2000 очков")
@@ -77,6 +85,8 @@ def get_player_input():
             while player_variant == "":
                 player_variant = input("Вы ничего не ввели,напишите одну букву или целое слово:")
             update_game_state(player_variant=player_variant,chosen_sector=chosen_sector)
+    else:
+        print("На барабане упало",chosen_sector)
 
 
     player_variant = input(
